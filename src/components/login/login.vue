@@ -40,24 +40,6 @@
             };
         },
         created: function () {
-            let aaa = this.$route.query.aaa;
-            getData({method: 'post', url: '/card/image/upload', data: {a: aaa}}).then(res => {
-                if (res.flags === 'success') {
-                    localStorage.setItem('token', res.data.token);
-//                            this.getCallToken();
-                    setStore('userName', res.data.nickname);
-                    if (res.data.indexPath) {
-                        this.$router.push({path: '/home/' + res.data.indexPath});
-                    }
-                } else {
-//                            alert(res.data);
-                    this.$Message.info(res.data);
-                    this.password = null;
-                }
-            }).catch(error => {
-                console.log(error.respMsg);
-            });
-            console.log(aaa);
         },
         computed: {
             verifyResult() {
@@ -77,9 +59,10 @@
                     };
                     getData({method: 'post', url: '/passport/signIn', data: data}).then(res => {
                         if (res.flags === 'success') {
-//                            localStorage.setItem('token', res.data.token);
+                            localStorage.setItem('token', res.data);
+                            this.getPowers();
 //                            this.getCallToken();
-//                            setStore('userName', res.data.nickname);
+                            setStore('userName', res.data);
 //                            if (res.data.indexPath) {
 //                                  this.$router.push({path: '/home/' + res.data.indexPath});
 //                            }
@@ -93,12 +76,12 @@
                     });
                 }
             },
-            getCallToken() {
-                getData({method: 'post', url: '/collection/udeskController/getToken'}).then(res => {
+            getPowers() {
+                getData({method: 'post', url: '/passport/powers', data: {}}).then(res => {
+                    console.log(res);
                     if (res.flags === 'success') {
-                        localStorage.setItem('callToken', res.data);
                     } else {
-                        alert(res.data);
+                        alert(res.data + '---');
                     }
                 }).catch(error => {
                     console.log(error.respMsg);

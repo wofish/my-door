@@ -30,6 +30,7 @@ let getData = ({method = 'get', url = '', data = null, params = null}) => {
         } else if (!res || !res.data) {
             window.location.href = '/';
         } else {
+            console.log(res + '--------' + url);
             return {
                 flags: 'fail',
                 data: res.data.respMsg,
