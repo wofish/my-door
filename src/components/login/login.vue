@@ -10,7 +10,7 @@
                         <div class="login-input">
                             <label class="login-label">
                                 <i class="icon-admin"></i>
-                                <input type="text" placeholder="请输入用户名" v-model="name">
+                                <input type="text" placeholder="请输入用户名" v-model="phoneNo">
                             </label>
                         </div>
                         <div class="login-input">
@@ -35,7 +35,7 @@
     export default {
         data() {
             return {
-                name: null,
+                phoneNo: null,
                 password: null
             };
         },
@@ -61,7 +61,7 @@
         },
         computed: {
             verifyResult() {
-                if (this.name && this.password) {
+                if (this.phoneNo && this.password) {
                     return true;
                 } else {
                     return false;
@@ -72,17 +72,17 @@
             login() {
                 if (this.verifyResult) {
                     let data = {
-                        name: this.name,
+                        phoneNo: this.phoneNo,
                         password: this.password
                     };
-                    getData({method: 'post', url: '/login', data: data}).then(res => {
+                    getData({method: 'post', url: '/passport/signIn', data: data}).then(res => {
                         if (res.flags === 'success') {
-                            localStorage.setItem('token', res.data.token);
+//                            localStorage.setItem('token', res.data.token);
 //                            this.getCallToken();
-                            setStore('userName', res.data.nickname);
-                            if (res.data.indexPath) {
-                                  this.$router.push({path: '/home/' + res.data.indexPath});
-                            }
+//                            setStore('userName', res.data.nickname);
+//                            if (res.data.indexPath) {
+//                                  this.$router.push({path: '/home/' + res.data.indexPath});
+//                            }
                         } else {
 //                            alert(res.data);
                             this.$Message.info(res.data);
