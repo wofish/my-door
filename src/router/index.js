@@ -7,6 +7,7 @@ Vue.use(VueRouter);
 
 const home = r => require.ensure([], () => r(require('../components/home/home')), 'home');
 const login = r => require.ensure([], () => r(require('../components/login/login')), 'login');
+const test = r => require.ensure([], () => r(require('../components/test/test')), 'test');
 const routes = [{
     path: '/',
     component: App,
@@ -18,6 +19,10 @@ const routes = [{
         {
             path: '/login',
             component: login
+        },
+        {
+            path: '/test',
+            component: test
         },
         {
             path: '/home',
@@ -38,7 +43,7 @@ const router = new VueRouter({
 });
 
 const registerRoutes = [
-    '/', '/login', '/home'
+    '/', '/login', '/home', '/test'
 ];
 router.beforeEach((to, from, next) => {
     // console.log(from.path);
