@@ -21,16 +21,16 @@ const routes = [{
             component: login
         },
         {
-            path: '/test',
-            component: test
-        },
-        {
             path: '/home',
             component: home,
             children: [
                 {
                     path: '',
                     redirect: '/login'
+                },
+                {
+                    path: 'test',
+                    component: test
                 }
             ]
         }
@@ -43,7 +43,7 @@ const router = new VueRouter({
 });
 
 const registerRoutes = [
-    '/', '/login', '/home', '/test'
+    '/', '/login', '/home', '/test', '/home/test'
 ];
 router.beforeEach((to, from, next) => {
     // console.log(from.path);
