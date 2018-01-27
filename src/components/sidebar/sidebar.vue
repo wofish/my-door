@@ -1,42 +1,97 @@
 <template>
     <div id="sidebar ">
         <ul class="sidebar-item clearfix">
-            <li v-for="item in tree1s" class="sidebar-name">
-                <!--<i :class="item.icon"></i>-->
-                <p @click="showToggle(item)"  class="firstText"  >
-                    <span >
-                        <i :class="item.icon"></i>
-                        <strong>{{item.name}}</strong>
-                    </span>
-                    <i :class="{'icon-down': item.subShow,'icon-right':item.subShow === false}" ></i>
-                </p>
-                <ul v-show="item.subShow">
-                    <li v-for="subItem in item.children"  >
-                        <p @click="(subItem.children.length == 0)? showThird(subItem,subItem.url): showToggle(subItem)" class="secText" >
-                            <span :class="{on: $route.path.indexOf( subItem.url ) !== -1}" >{{subItem.name}}</span>
-                            <i v-show='subItem.children.length > 0 ' :class="{'icon-down': subItem.subShow,'icon-right':!subItem.subShow}" ></i>
-                        </p>
-                        <ul v-show="subItem.subShow">
-                            <li v-for="thirdItem in subItem.children">
-                                <p  @click="showForth(thirdItem,thirdItem.url)"  class="thirdText">
-                                    <span :class="{on: $route.path.indexOf( thirdItem.url ) !== -1}">{{thirdItem.name}}</span>
-                                </p>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
+            <my-tree v-for="menuItem in theModel" :key="menuItem.id" :model="menuItem" :subMenuData="subMenuData"></my-tree>
         </ul>
     </div>
 </template>
+
 <script type="text/ecmascript-6">
+    const myData = [
+        {
+            'id': '1',
+            'menuName': '基础管理',
+            'menuCode': '10'
+        },
+        {
+            'id': '2',
+            'menuName': '商品管理',
+            'menuCode': ''
+        },
+        {
+            'id': '3',
+            'menuName': '订单管理',
+            'menuCode': '30',
+            'children': [
+                {
+                    'menuName': '订单列表',
+                    'menuCode': '31'
+                },
+                {
+                    'menuName': '退货列表',
+                    'menuCode': '32',
+                    'children': []
+                }
+            ]
+        },
+        {
+            'id': '4',
+            'menuName': '商家管理',
+            'menuCode': '',
+            'children': []
+        }
+    ];
+
+    const subMenuData = {
+        parentId: '1',
+        list: [
+            {
+                'menuName': '用户管理',
+                'menuCode': '11'
+            },
+            {
+                'menuName': '角色管理',
+                'menuCode': '12',
+                'children': [
+                    {
+                        'menuName': '管理员',
+                        'menuCode': '121'
+                    },
+                    {
+                        'menuName': 'CEO',
+                        'menuCode': '122'
+                    },
+                    {
+                        'menuName': 'CFO',
+                        'menuCode': '123'
+                    },
+                    {
+                        'menuName': 'COO',
+                        'menuCode': '124'
+                    },
+                    {
+                        'menuName': '普通人',
+                        'menuCode': '124'
+                    }
+                ]
+            },
+            {
+                'menuName': '权限管理',
+                'menuCode': '13'
+            }
+        ]
+    };
+    import myTree from '../common/treeMenu.vue';
     import { getData } from '../../server/getData';
-//    import bus from '../../assets/eventBus';
-//    import $ from 'jquery';
     export default {
+        components: {
+            myTree
+        },
         data() {
             return {
-                 tree1s: []
+                 tree1s: [],
+                theModel: myData,
+                subMenuData
 //                 shrink: true
             };
         },

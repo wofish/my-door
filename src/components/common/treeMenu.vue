@@ -1,7 +1,7 @@
 <template>
-  <li>
+  <li class="sidebar-name">
     <span @click="toggle">
-      <i :class="['icon', (isFolder || isDynamicFolder) ? folderIcon : 'file-text']"></i>
+      <i :class="['icon','sidebar-name', (isFolder || isDynamicFolder) ? folderIcon : 'file-text']" ></i>
       {{ model.menuName }}
     </span>
     <ul v-if="isOpen">
