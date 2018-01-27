@@ -1,86 +1,12 @@
 <template>
     <div id="sidebar ">
         <ul class="sidebar-item clearfix">
-            <my-tree v-for="menuItem in theModel" :key="menuItem.id" :model="menuItem" :subMenuData="subMenuData"></my-tree>
+            <my-tree v-for="menuItem in theModel" :key="menuItem.no" :model="menuItem" ></my-tree>
         </ul>
     </div>
 </template>
 
 <script type="text/ecmascript-6">
-    const myData = [
-        {
-            'id': '1',
-            'menuName': '基础管理',
-            'menuCode': '10'
-        },
-        {
-            'id': '2',
-            'menuName': '商品管理',
-            'menuCode': ''
-        },
-        {
-            'id': '3',
-            'menuName': '订单管理',
-            'menuCode': '30',
-            'children': [
-                {
-                    'menuName': '订单列表',
-                    'menuCode': '31'
-                },
-                {
-                    'menuName': '退货列表',
-                    'menuCode': '32',
-                    'children': []
-                }
-            ]
-        },
-        {
-            'id': '4',
-            'menuName': '商家管理',
-            'menuCode': '',
-            'children': []
-        }
-    ];
-
-    const subMenuData = {
-        parentId: '1',
-        list: [
-            {
-                'menuName': '用户管理',
-                'menuCode': '11'
-            },
-            {
-                'menuName': '角色管理',
-                'menuCode': '12',
-                'children': [
-                    {
-                        'menuName': '管理员',
-                        'menuCode': '121'
-                    },
-                    {
-                        'menuName': 'CEO',
-                        'menuCode': '122'
-                    },
-                    {
-                        'menuName': 'CFO',
-                        'menuCode': '123'
-                    },
-                    {
-                        'menuName': 'COO',
-                        'menuCode': '124'
-                    },
-                    {
-                        'menuName': '普通人',
-                        'menuCode': '124'
-                    }
-                ]
-            },
-            {
-                'menuName': '权限管理',
-                'menuCode': '13'
-            }
-        ]
-    };
     import myTree from '../common/treeMenu.vue';
     import { getData } from '../../server/getData';
     export default {
@@ -89,44 +15,27 @@
         },
         data() {
             return {
-                 tree1s: [],
-                theModel: myData,
-                subMenuData
-//                 shrink: true
+                theModel: null
             };
         },
         methods: {
-            showToggle: function(item) {
-                item.subShow = !item.subShow;
-            },
-            showThird: function(item, path) {
-                let that = this;
-                setTimeout(function() {
-                    that.$router.push(path);
-                }, 200);
-            },
-            showForth: function(item, path) {
-                let that = this;
-                setTimeout(function() {
-                    that.$router.push(path);
-                }, 200);
+            getPowers() {
+                getData({method: 'post', url: '/passport/powers', data: {}}).then(res => {
+                    console.log(res);
+                    if (res.flags === 'success') {
+                        console.log(res.data + '---');
+                        this.theModel = res.data;
+                    } else {
+                        alert(res.data + '---');
+                    }
+                }).catch(error => {
+                    console.log(error.respMsg);
+                });
             }
         },
         created() {
-            getData({method: 'get', url: '/user/menus', data: {}}).then(res => {
-                this.tree1s = res.data;
-            }).catch(error => {
-                console.log(error.respMsg);
-            });
-//            bus.$on('open', function() {
-//                this.shrink = !this.shrink;
-//            });
+            this.getPowers();
         }
-//        mounted() {
-//            bus.$on('open', function() {
-//              this.shrink = !this.shrink;
-//            });
-//        }
     };
 </script>
 <style lang="stylus" rel="stylesheet/stylus" scoped>

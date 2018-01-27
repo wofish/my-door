@@ -1,8 +1,8 @@
 <template>
-  <li class="sidebar-name">
+  <li class="sidebar-name" v-show="model.auth">
     <span @click="toggle">
       <i :class="['icon','sidebar-name', (isFolder || isDynamicFolder) ? folderIcon : 'file-text']" ></i>
-      {{ model.menuName }}
+      {{ model.name }}
     </span>
     <ul v-if="isOpen">
       <tree-menu v-for="item in model.children" :key="item.id" :model="item"></tree-menu>
@@ -14,8 +14,7 @@
 export default {
   name: 'treeMenu',
   props: {
-    model: Object,
-    subMenuData: Object
+    model: Object
   },
   data () {
     return {
@@ -38,18 +37,11 @@ export default {
   methods: {
     toggle () {
       const menuData = this.model;
-      const subMenuData = this.subMenuData;
-
-      if (subMenuData && (menuData.id === subMenuData.parentId && subMenuData.list) && !menuData.children) {
-        menuData.children = subMenuData.list;
-        this.isDynamicFolder = !!(menuData.children && menuData.children.length);
-        this.isOpen = true;
-        this.folderIcon = 'folder-open';
-      }
-
       if (this.isFolder || this.isDynamicFolder) {
         this.isOpen = !this.isOpen;
         this.folderIcon = this.isOpen ? 'folder-open' : 'folder';
+      } else {
+          alert('not folder' + menuData.menuName);
       }
     }
   }

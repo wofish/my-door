@@ -59,10 +59,11 @@
                     };
                     getData({method: 'post', url: '/passport/signIn', data: data}).then(res => {
                         if (res.flags === 'success') {
-                            localStorage.setItem('token', res.data);
-                            this.getPowers();
+                            localStorage.setItem('token', res.data.token);
+
 //                            this.getCallToken();
-                            setStore('userName', res.data);
+                            setStore('userName', res.data.name);
+                            this.$router.push({path: '/home/test'});
 //                            if (res.data.indexPath) {
 //                                  this.$router.push({path: '/home/' + res.data.indexPath});
 //                            }
@@ -75,17 +76,6 @@
                         console.log(error.respMsg);
                     });
                 }
-            },
-            getPowers() {
-                getData({method: 'post', url: '/passport/powers', data: {}}).then(res => {
-                    console.log(res);
-                    if (res.flags === 'success') {
-                    } else {
-                        alert(res.data + '---');
-                    }
-                }).catch(error => {
-                    console.log(error.respMsg);
-                });
             }
         }
     };
