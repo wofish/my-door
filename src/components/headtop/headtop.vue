@@ -50,7 +50,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-   import { getStore, password, trim } from '../../common/js/util';
+   import { getStore, removeStore, password, trim } from '../../common/js/util';
    import { getData } from '../../server/getData';
 //   import bus from '../../assets/eventBus';
     export default {
@@ -70,11 +70,11 @@
                 bus.$emit('open');
             },
             exit() {
-                getData({method: 'get', url: '/login'}).then(res => {
+                getData({method: 'post', url: '/passport/signOut', data: {}}).then(res => {
                     if (res.flags === 'success') {
                         this.$router.push({path: '/login'});
                         localStorage.removeItem('token');
-                        localStorage.removeItem('callToken');
+                        removeStore('userName', res.data.name);
                     } else {
 //                        alert(res.data);
                     }
