@@ -41,7 +41,8 @@ export default {
         this.isOpen = !this.isOpen;
         this.folderIcon = this.isOpen ? 'folder-open' : 'folder';
       } else {
-          alert('not folder' + menuData.menuName);
+          alert('not folder' + menuData.menuName + 'url=' + menuData.url);
+          this.$router.push({path: menuData.url});
       }
     }
   }
