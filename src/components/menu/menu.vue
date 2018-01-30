@@ -172,7 +172,18 @@
                 this.addMenuModal = true;
             },
             saveAddMenu: function(res) {
-                alert(res.phoneNo);
+                getData({method: 'post', url: '/menu/create', data: res}).then(res => {
+                    if (res.flags === 'success') {
+                        this.$Message.info('保存成功！');
+                        this.closeAddMenu();
+                        this.historyData.push(res);
+//                        this.$router.replace({path: '/home/menu'});
+                    } else {
+                        alert(res.data);
+                    }
+                }).catch(error => {
+                    console.log(error.respMsg);
+                });
             },
             formatDate (time) {
                 let ratingDate = new Date(time);
