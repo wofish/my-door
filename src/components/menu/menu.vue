@@ -9,22 +9,28 @@
                     <!--订单号：<Input  v-model = 'vertifyStatus.loanId'   style="width: 200px" placeholder="请输入订单号"></Input>-->
                     <strong>查询项：</strong>
                 </p>
+                <p  class="operate"  style="float:left;width: 18%;">
+                    <Button @click="addMenu">添加</Button>
+                </p>
             </div>
         </div>
         <div  class="financeLoan-list" id="vertify-manage-list"><!--height="450"-->
-            <Table :data="historyData" :columns="historyColumns" border stripe  height="500" @on-selection-change="chooseApply" :no-data-text="text"></Table>
+            <Table :data="historyData" :columns="historyColumns" border stripe  height="500" :no-data-text="text"></Table>
             <div style="margin: 10px;overflow: hidden">
                 <div style="float: right;padding:20px 0;">
                     <Page :total="dataCount" :current="1" @on-change="changepage" :page-size="pageSize" show-total class="paging" show-elevator ></Page>
                 </div>
             </div>
         </div>
+        <!--联系人信息-新增-->
+        <addMenu @closeAddMenu="closeAddMenu" ref="menuAddChild" @saveAddMenu="saveAddMenu"  :class="{'hide':addMenuModal}"></addMenu>
     </div>
 </template>
 
 <script type="text/ecmascript-6" >
     import HeadTop from '../headtop/headtop';
     import SideBar from '../sidebar/sidebar';
+    import addMenu from '../popUp/addMenu';
     import { dateFormat, setTitle, formatDate, trim, getDate } from '../../common/js/util';
     import { getData } from '../../server/getData';
 
@@ -32,11 +38,7 @@
         data() {
             return {
                 active: false,
-                cutPaymentInfo: null,
-                cutPaymentModal: true,
                 text: '数据正在加载中',
-                changeModal: true,
-                takeBackModal: true,
                 currentDate: null,
                 current: 1,
                 dataList: [
@@ -120,7 +122,7 @@
                 dataCount: 0,
                 // 每页显示多少条
                 pageSize: 10,
-                payMoneyModal: true,
+                addMenuModal: true,
                 vertifyStatus: {
                     loadId: null,
                     phoneNo: null,
@@ -133,27 +135,12 @@
                     page: 1
                 },
                 chooseSelection: [],
-                isMobile: false,
-                isName: true,
-                isApplyNo: false,
-                token: null,
-                loanId: null,
-                id: null,
-                cardList: [],
-                allInfo: null,
-                newCard: null,
-                applyNo: null,
-                currentName: null,
-                obj: {},
-                newObj: {},
-                oldBankNo: null,
-                oldBankName: null,
-                newBankNo: null,
-                newBankName: null
+                token: null
             };
         },
         components: {
             HeadTop,
+            addMenu,
             SideBar
         },
         methods: {
@@ -172,6 +159,20 @@
                 }).catch(error => {
                     console.log(error.respMsg);
                 });
+            },
+            changepage(index) {
+                this.vertifyStatus.page = index;
+                this.all();
+                this.getList(this.vertifyStatus);
+            },
+            addMenu() {
+                this.addMenuModal = !this.addMenuModal;
+            },
+            closeAddMenu: function() {
+                this.addMenuModal = true;
+            },
+            saveAddMenu: function(res) {
+                alert(res.phoneNo);
             },
             formatDate (time) {
                 let ratingDate = new Date(time);
