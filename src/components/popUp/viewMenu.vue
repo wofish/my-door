@@ -1,18 +1,18 @@
 <template>
-    <div class="addMenuRecord">
+    <div class="viewMenu">
         <div class="ivu-modal-mask">
             <div class="ivu-modal-wrap">
                 <div class="ivu-modal-header">
-                    <div class="ivu-modal-header-inner">添加菜单</div>
+                    <div class="ivu-modal-header-inner">查看菜单</div>
                 </div>
                 <div class="ivu-modal-body">
                     <div>
                         <span>名称：</span>
-                        <Input v-model="newAddMenu.name"  placeholder="请输入手机号码" style="width: 200px"></Input>
+                        <Input v-model="viewMenuData.name"  placeholder="请输入手机号码" style="width: 200px"></Input>
                     </div>
                     <div class="input-item">
                         <span>url：</span>
-                        <Input v-model="newAddMenu.url"  placeholder="请输入姓名" style="width: 210px"></Input>
+                        <Input v-model="viewMenuData.url"  placeholder="请输入姓名" style="width: 210px"></Input>
                     </div>
 
                 </div>
@@ -37,14 +37,14 @@
     export default {
         data() {
             return {
-                newAddMenu: {
+                /*viewMenu: {
                     url: null,
                     name: null
-                }
+                }*/
             };
         },
         props: [
-            'addMenuRecord', 'addType'
+            'viewMenuData'
         ],
         components: {
             HeadTop,
@@ -52,14 +52,14 @@
         },
         methods: {
             clear: function() {
-                this.newAddMenu.url = null;
-                this.newAddMenu.name = null;
+//                this.viewMenuData.url = null;
+//                this.viewMenuData.name = null;
             },
             cancel: function() {
-                this.$emit('closeAddMenu');
+                this.$emit('closeViewMenu');
             },
             ok: function() {
-                this.$emit('saveAddMenu', this.newAddMenu);
+                this.$emit('saveViewMenu', this.viewMenuData);
             }
         }
     };
@@ -79,7 +79,7 @@
         -webkit-overflow-scrolling  touch
         outline 0
         border-radius 10px
-    .addMenuRecord
+    .viewMenu
         .ivu-modal-wrap
             height 360px
             margin-top -180px

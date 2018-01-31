@@ -24,6 +24,7 @@
         </div>
         <!--联系人信息-新增-->
         <addMenu @closeAddMenu="closeAddMenu" ref="menuAddChild" @saveAddMenu="saveAddMenu"  :class="{'hide':addMenuModal}"></addMenu>
+        <viewMenu @closeViewMenu="closeViewMenu" ref="menuViewChild" @saveViewMenu="saveViewMenu"  :viewMenuData="viewMenuData" :class="{'hide':viewMenuModal}"></viewMenu>
     </div>
 </template>
 
@@ -31,6 +32,7 @@
     import HeadTop from '../headtop/headtop';
     import SideBar from '../sidebar/sidebar';
     import addMenu from '../popUp/addMenu';
+    import viewMenu from '../popUp/viewMenu';
     import { dateFormat, setTitle, formatDate, trim, getDate } from '../../common/js/util';
     import { getData } from '../../server/getData';
 
@@ -94,10 +96,10 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.changeCard(params.row);
+                                            this.viewMenu(params.row);
                                         }
                                     }
-                                }, '换卡'),
+                                }, '查看'),
                                 h('Button', {
                                     props: {
                                         type: 'primary',
@@ -123,6 +125,7 @@
                 // 每页显示多少条
                 pageSize: 10,
                 addMenuModal: true,
+                viewMenuModal: true,
                 vertifyStatus: {
                     loadId: null,
                     phoneNo: null,
@@ -135,12 +138,14 @@
                     page: 1
                 },
                 chooseSelection: [],
+                viewMenuData: null,
                 token: null
             };
         },
         components: {
             HeadTop,
             addMenu,
+            viewMenu,
             SideBar
         },
         methods: {
@@ -168,8 +173,15 @@
             addMenu() {
                 this.addMenuModal = !this.addMenuModal;
             },
+            viewMenu(menu) {
+                this.viewMenuData = menu;
+                this.viewMenuModal = !this.viewMenuModal;
+            },
             closeAddMenu: function() {
                 this.addMenuModal = true;
+            },
+            closeViewMenu: function() {
+                this.viewMenuModal = true;
             },
             saveAddMenu: function(res) {
                 getData({method: 'post', url: '/menu/create', data: res}).then(res => {
@@ -178,6 +190,18 @@
                         this.closeAddMenu();
                         this.historyData.push(res);
 //                        this.$router.replace({path: '/home/menu'});
+                    } else {
+                        alert(res.data);
+                    }
+                }).catch(error => {
+                    console.log(error.respMsg);
+                });
+            },
+            saveViewMenu: function(res) {
+                getData({method: 'post', url: '/menu/update/' + res.no, data: res}).then(res => {
+                    if (res.flags === 'success') {
+                        this.$Message.info('修改成功！');
+                        this.closeViewMenu();
                     } else {
                         alert(res.data);
                     }
