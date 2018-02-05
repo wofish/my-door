@@ -1,7 +1,7 @@
 <template>
     <div class="financeLoan">
         <div class="financeLoan-title">
-            <span>结算付款</span>
+            <span>菜单列表</span>
         </div>
         <div class="financeLoan-filter clearfix">
             <div class="clearfix">
@@ -111,10 +111,10 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.cutPayment(params.row);
+                                            this.deleteMenu(params.row);
                                         }
                                     }
-                                }, '扣款')
+                                }, '删除')
                             ]);
                         }
                     }
@@ -176,6 +176,9 @@
             viewMenu(menu) {
                 this.viewMenuData = menu;
                 this.viewMenuModal = !this.viewMenuModal;
+            },
+            deleteMenu(menu) {
+
             },
             closeAddMenu: function() {
                 this.addMenuModal = true;
@@ -262,7 +265,7 @@
         },
         mounted() {
             setTimeout(function() {
-                setTitle('结算付款');
+                setTitle('菜单管理');
             }, 0);
         }
     };

@@ -5,10 +5,14 @@
                 <div class="ivu-modal-header">
                     <div class="ivu-modal-header-inner">查看菜单</div>
                 </div>
-                <div class="ivu-modal-body">
+                <div class="ivu-modal-body" v-if="viewMenuData">
                     <div>
                         <span>名称：</span>
-                        <Input v-model="viewMenuData.name"  placeholder="请输入手机号码" style="width: 200px"></Input>
+                        <Input v-model="viewMenuData.name"  placeholder="请输入菜单名称" style="width: 200px"></Input>
+                    </div>
+                    <div>
+                        <span>父节点：</span>
+                        <Input v-model="viewMenuData.parentNo"  placeholder="请输入父节点" style="width: 200px"></Input>
                     </div>
                     <div class="input-item">
                         <span>url：</span>
