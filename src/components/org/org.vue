@@ -1,7 +1,7 @@
 <template>
     <div class="financeLoan">
         <div class="financeLoan-title">
-            <span>菜单列表</span>
+            <span>角色列表</span>
         </div>
         <div class="financeLoan-filter clearfix">
             <div class="clearfix">
@@ -23,16 +23,16 @@
             </div>
         </div>
         <!--联系人信息-新增-->
-        <addMenu @closeAddMenu="closeAddMenu" ref="menuAddChild" @saveAddMenu="saveAddMenu"  :class="{'hide':addMenuModal}"></addMenu>
-        <viewMenu @closeViewMenu="closeViewMenu" ref="menuViewChild" @saveViewMenu="saveViewMenu"  :viewMenuData="viewMenuData" :class="{'hide':viewMenuModal}"></viewMenu>
+        <addOrg @closeAddOrg="closeAddOrg" ref="orgAddChild" @saveAddMenu="saveAddOrg"  :class="{'hide':addOrgModal}"></addOrg>
+        <viewOrg @closeViewMenu="closeViewOrg" ref="orgViewChild" @saveViewOrg="saveViewOrg"  :viewMenuData="viewOrgData" :class="{'hide':viewOrgModal}"></viewOrg>
     </div>
 </template>
 
 <script type="text/ecmascript-6" >
     import HeadTop from '../headtop/headtop';
     import SideBar from '../sidebar/sidebar';
-    import addMenu from '../popUp/addMenu';
-    import viewMenu from '../popUp/viewMenu';
+    import addOrg from '../popUp/addOrg';
+    import viewOrg from '../popUp/viewOrg';
     import { dateFormat, setTitle, formatDate, trim, getDate } from '../../common/js/util';
     import { getData } from '../../server/getData';
 
@@ -43,6 +43,18 @@
                 text: '数据正在加载中',
                 currentDate: null,
                 current: 1,
+                vertifyStatus: {
+                    loadId: null,
+                    phoneNo: null,
+                    name: null,
+                    transferStatus: 'WAITING_FOR_TRANSFER',
+                    startDateStr: null,
+                    endDateStr: null,
+                    userId: 1,
+                    rows: 10,
+                    page: 1
+                },
+                chosenApplyNos: [],
                 ajaxHistoryData: [],
                 historyColumns: [
                     {type: 'selection', align: 'center', width: 80},
@@ -112,33 +124,22 @@
                 dataCount: 0,
                 // 每页显示多少条
                 pageSize: 10,
-                addMenuModal: true,
-                viewMenuModal: true,
-                vertifyStatus: {
-                    loadId: null,
-                    phoneNo: null,
-                    name: null,
-                    transferStatus: 'WAITING_FOR_TRANSFER',
-                    startDateStr: null,
-                    endDateStr: null,
-                    userId: 1,
-                    rows: 10,
-                    page: 1
-                },
+                addOrgModal: true,
+                viewOrgModal: true,
                 chooseSelection: [],
-                viewMenuData: null,
+                viewOrgData: null,
                 token: null
             };
         },
         components: {
             HeadTop,
-            addMenu,
-            viewMenu,
+            addOrg,
+            viewOrg,
             SideBar
         },
         methods: {
             getList(data) {
-                getData({method: 'post', url: '/menu/menus', data: data}).then(res => {
+                getData({method: 'post', url: '/org/orgs', data: data}).then(res => {
                     if (res.flags === 'success') {
                         if (res.data.rows.length === 0 || res.data.rows === null) {
                             this.text = '暂无数据';
@@ -158,24 +159,24 @@
                 this.all();
                 this.getList(this.vertifyStatus);
             },
-            addMenu() {
-                this.addMenuModal = !this.addMenuModal;
+            addOrg() {
+                this.addOrgModal = !this.addOrgModal;
             },
-            viewMenu(menu) {
-                this.viewMenuData = menu;
-                this.viewMenuModal = !this.viewMenuModal;
+            viewOrg(menu) {
+                this.viewOrgData = menu;
+                this.viewOrgModal = !this.viewOrgModal;
             },
-            deleteMenu(menu) {
+            deleteOrg(menu) {
 
             },
-            closeAddMenu: function() {
-                this.addMenuModal = true;
+            closeAddOrg: function() {
+                this.addOrgModal = true;
             },
-            closeViewMenu: function() {
-                this.viewMenuModal = true;
+            closeViewOrg: function() {
+                this.viewOrgModal = true;
             },
             saveAddMenu: function(res) {
-                getData({method: 'post', url: '/menu/create', data: res}).then(res => {
+                getData({method: 'post', url: '/org/create', data: res}).then(res => {
                     if (res.flags === 'success') {
                         this.$Message.info('保存成功！');
                         this.closeAddMenu();
@@ -188,11 +189,11 @@
                     console.log(error.respMsg);
                 });
             },
-            saveViewMenu: function(res) {
-                getData({method: 'post', url: '/menu/update/' + res.no, data: res}).then(res => {
+            saveViewOrg: function(res) {
+                getData({method: 'post', url: '/org/update/' + res.no, data: res}).then(res => {
                     if (res.flags === 'success') {
                         this.$Message.info('修改成功！');
-                        this.closeViewMenu();
+                        this.closeViewOrg();
                     } else {
                         alert(res.data);
                     }
