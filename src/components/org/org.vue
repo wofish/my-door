@@ -1,7 +1,7 @@
 <template>
     <div class="financeLoan">
         <div class="financeLoan-title">
-            <span>角色列表</span>
+            <span>机构列表</span>
         </div>
         <div class="financeLoan-filter clearfix">
             <div class="clearfix">
@@ -10,7 +10,7 @@
                     <strong>查询项：</strong>
                 </p>
                 <p  class="operate"  style="float:left;width: 18%;">
-                    <Button @click="addMenu">添加</Button>
+                    <Button @click="addOrg">添加</Button>
                 </p>
             </div>
         </div>
@@ -23,8 +23,8 @@
             </div>
         </div>
         <!--联系人信息-新增-->
-        <addOrg @closeAddOrg="closeAddOrg" ref="orgAddChild" @saveAddMenu="saveAddOrg"  :class="{'hide':addOrgModal}"></addOrg>
-        <viewOrg @closeViewMenu="closeViewOrg" ref="orgViewChild" @saveViewOrg="saveViewOrg"  :viewMenuData="viewOrgData" :class="{'hide':viewOrgModal}"></viewOrg>
+        <addOrg @closeAddOrg="closeAddOrg" ref="orgAddChild" @saveAddOrg="saveAddOrg" :types="types"  :class="{'hide':addOrgModal}"></addOrg>
+        <viewOrg @closeViewOrg="closeViewOrg" ref="orgViewChild" @saveViewOrg="saveViewOrg" :types="types" :viewOrgData="viewOrgData" :class="{'hide':viewOrgModal}"></viewOrg>
     </div>
 </template>
 
@@ -43,6 +43,16 @@
                 text: '数据正在加载中',
                 currentDate: null,
                 current: 1,
+                types: [
+                    {
+                        name: '总公司',
+                        type: 'HEAD'
+                    },
+                    {
+                        name: '分公司',
+                        type: 'BRANCH'
+                    }
+                ],
                 vertifyStatus: {
                     loadId: null,
                     phoneNo: null,
@@ -61,8 +71,19 @@
                     {type: 'index', align: 'center', width: 80, title: '编号'},
                     {title: '编号', key: 'no', align: 'center', width: '250'},
                     {title: '名称', key: 'name', align: 'center'},
-                    {title: 'url', key: 'url', align: 'center'},
-                    {title: '父节点', key: 'parentNo', align: 'center'},
+                    {
+                        title: '类型',
+                        key: 'type',
+                        align: 'center',
+                        render: (h, params) => {
+                            if (params.row.type === 'HEAD') {
+                                return '总公司';
+                            } else {
+                                return '分公司';
+                            }
+                        }
+                    },
+                    {title: '备注', key: 'remark', align: 'center'},
                     {title: '创建时间', key: 'createTime', align: 'center'},
                     {
                         title: '操作',
@@ -96,7 +117,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.viewMenu(params.row);
+                                            this.viewOrg(params.row);
                                         }
                                     }
                                 }, '查看'),
@@ -111,7 +132,7 @@
                                     },
                                     on: {
                                         click: () => {
-                                            this.deleteMenu(params.row);
+                                            this.deleteOrg(params.row);
                                         }
                                     }
                                 }, '删除')
@@ -162,11 +183,11 @@
             addOrg() {
                 this.addOrgModal = !this.addOrgModal;
             },
-            viewOrg(menu) {
-                this.viewOrgData = menu;
+            viewOrg(org) {
+                this.viewOrgData = org;
                 this.viewOrgModal = !this.viewOrgModal;
             },
-            deleteOrg(menu) {
+            deleteOrg(org) {
 
             },
             closeAddOrg: function() {
@@ -174,14 +195,14 @@
             },
             closeViewOrg: function() {
                 this.viewOrgModal = true;
+                this.$router.replace({path: '/home/org'});
             },
-            saveAddMenu: function(res) {
-                getData({method: 'post', url: '/org/create', data: res}).then(res => {
+            saveAddOrg: function(data) {
+                getData({method: 'post', url: '/org/create', data: data}).then(res => {
                     if (res.flags === 'success') {
                         this.$Message.info('保存成功！');
-                        this.closeAddMenu();
-                        this.historyData.push(res);
-//                        this.$router.replace({path: '/home/menu'});
+                        this.closeAddOrg();
+                        this.historyData.push(res.data);
                     } else {
                         alert(res.data);
                     }

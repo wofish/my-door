@@ -10,13 +10,16 @@
                         <span>名称：</span>
                         <Input v-model="viewOrgData.name"  placeholder="请输入菜单名称" style="width: 200px"></Input>
                     </div>
-                    <div>
-                        <span>父节点：</span>
-                        <Input v-model="viewOrgData.parentNo"  placeholder="请输入父节点" style="width: 200px"></Input>
+                    <div class="input-item">
+                        <span>类型：</span>
+                        <Select v-model="viewOrgData.type" style="width:240px" :transfer="true">
+                            <Option v-for="item in types" :value="item.type" :key="item.type">{{item.name}}
+                            </Option>
+                        </Select>
                     </div>
                     <div class="input-item">
-                        <span>url：</span>
-                        <Input v-model="viewOrgData.url"  placeholder="请输入姓名" style="width: 210px"></Input>
+                        <span>备注：</span>
+                        <Input v-model="viewOrgData.remark"  placeholder="请输入备注" style="width: 210px"></Input>
                     </div>
 
                 </div>
@@ -41,14 +44,11 @@
     export default {
         data() {
             return {
-                /*viewOrg: {
-                    url: null,
-                    name: null
-                }*/
+
             };
         },
         props: [
-            'viewOrgData'
+            'viewOrgData', 'types'
         ],
         components: {
             HeadTop,

@@ -8,11 +8,18 @@
                 <div class="ivu-modal-body">
                     <div>
                         <span>名称：</span>
-                        <Input v-model="newAddOrg.name"  placeholder="请输入手机号码" style="width: 200px"></Input>
+                        <Input tabindex="0" v-model="newAddOrg.name"  placeholder="请输入名称" style="width: 200px"></Input>
                     </div>
                     <div class="input-item">
-                        <span>url：</span>
-                        <Input v-model="newAddOrg.url"  placeholder="请输入姓名" style="width: 210px"></Input>
+                        <span>类型：</span>
+                        <Select tabindex="1" v-model="newAddOrg.type" style="width:240px" :transfer="true">
+                            <Option v-for="item in types" :value="item.type" :key="item.type">{{item.name}}
+                            </Option>
+                        </Select>
+                    </div>
+                    <div class="input-item">
+                        <span>备注：</span>
+                        <Input tabindex="2" v-model="newAddOrg.remark"  placeholder="请输入备注" style="width: 210px"></Input>
                     </div>
 
                 </div>
@@ -38,13 +45,14 @@
         data() {
             return {
                 newAddOrg: {
-                    url: null,
-                    name: null
+                    name: null,
+                    type: null,
+                    remark: null
                 }
             };
         },
         props: [
-            'addOrgRecord'
+            'addOrgRecord', 'types'
         ],
         components: {
             HeadTop,
